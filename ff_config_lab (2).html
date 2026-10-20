@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FF Config Lab</title>
+<style>
+:root{--bg:#080b13;--panel:#111827;--panel2:#182235;--line:#2d354a;--text:#f7f8ff;--muted:#a6b0c7;--cyan:#52f4d0;--blue:#5e8dff;--pink:#ff4e86;--good:#70e6a5;--orange:#ff9d3d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 12% 5%,#4c1e3544 0,transparent 28%),radial-gradient(ellipse at 88% 10%,#164f4c55 0,transparent 30%),radial-gradient(ellipse at 50% 100%,#2b255144 0,transparent 36%),var(--bg);background-attachment:fixed;color:var(--text);font:15px/1.5 Inter,system-ui,Segoe UI,Arial,sans-serif;overflow-x:hidden}body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;background:linear-gradient(110deg,var(--cyan),#6ba4ff);color:#07111a;font-weight:850;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;box-shadow:0 5px 18px #42e8d51c}button:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 8px 25px #42e8d52a}button:active{transform:translateY(0)}button.secondary{background:#202d42;color:var(--text);border:1px solid var(--line)}button:disabled{opacity:.4;cursor:not-allowed}
+.top{display:flex;align-items:center;justify-content:space-between;padding:18px max(18px,calc((100% - 1180px)/2));border-bottom:1px solid #26344a99;background:#090d16d9;box-shadow:0 8px 35px #0003;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.brand{display:flex;gap:10px;align-items:center;font-weight:950;letter-spacing:.5px}.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--orange),var(--pink) 45%,var(--cyan));color:#07111a;box-shadow:0 0 25px #ff4e8633;transform:rotate(-4deg)}
+.wrap{max-width:1180px;margin:auto;padding:28px 18px 60px}.hero{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:12px 0 25px;padding:28px;border:1px solid #ffffff18;border-radius:24px;background:linear-gradient(120deg,#1a253be8,#171525e8 58%,#342035c9);box-shadow:0 25px 70px #0003;position:relative;overflow:hidden}.hero:after{content:"⚡";position:absolute;right:13%;top:-55px;font-size:220px;line-height:1;color:#ffffff07;transform:rotate(13deg);pointer-events:none}.hero>div{position:relative;z-index:1}.eyebrow{color:var(--cyan);font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase}.hero h1{font-size:clamp(30px,5vw,52px);line-height:1.03;margin:9px 0 12px;letter-spacing:-1.8px}.hero p{color:var(--muted);max-width:650px;margin:0}.heroTag{border:1px solid #ffffff24;background:linear-gradient(135deg,#1a403d,#292341);padding:14px 16px;border-radius:14px;color:var(--cyan);font-weight:800;white-space:nowrap;box-shadow:0 0 35px #42e8d512}
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:18px}.side,.panel{background:linear-gradient(145deg,#121a2af2,#0f1522f5);border:1px solid #ffffff14;border-radius:18px;box-shadow:0 16px 45px #0002;backdrop-filter:blur(12px)}.side{padding:12px;height:max-content;position:sticky;top:84px}.nav{display:flex;gap:10px;align-items:center;width:100%;background:transparent;color:var(--muted);text-align:left;margin:3px 0;padding:12px;border:1px solid transparent}.nav.active{background:linear-gradient(100deg,#193e3b,#262341);color:var(--text);border-color:#52f4d077;box-shadow:inset 3px 0 var(--cyan)}.nav span{width:23px;text-align:center}.sideNote{margin:18px 7px 4px;color:var(--muted);font-size:12px}.main{min-width:0}.panel{padding:22px;margin-bottom:18px}.panelHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}.panel h2{font-size:20px;margin:0 0 4px}.sub{color:var(--muted);font-size:13px}.pill{display:inline-flex;align-items:center;gap:6px;background:#19352f;color:var(--good);border:1px solid #285d4d;border-radius:30px;padding:5px 9px;font-size:11px;font-weight:800}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:12px;color:var(--muted);font-weight:750}.field input,.field select{width:100%;padding:12px;background:#0b1220;border:1px solid var(--line);border-radius:10px;color:var(--text);outline:none}.field input:focus,.field select:focus{border-color:var(--cyan)}.full{width:100%}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.metric{background:linear-gradient(145deg,#121d30,#0b1220);border:1px solid #ffffff14;padding:15px;border-radius:13px;transition:transform .2s,border-color .2s}.metric:hover{transform:translateY(-3px);border-color:#52f4d066}.metric small{color:var(--muted);display:block}.metric strong{display:block;font-size:25px;margin-top:3px}.sensGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}.sens{background:linear-gradient(145deg,#111d2f,#0b1220);border:1px solid #ffffff14;border-radius:12px;padding:14px;transition:transform .2s}.sens:hover{transform:translateY(-3px)}.sens span{font-size:12px;color:var(--muted)}.sens strong{display:block;font-size:27px;color:var(--cyan)}.result{display:none;margin-top:18px}.result.show{display:block}.smallprint{font-size:12px;color:var(--muted);margin-top:14px}.points{font-weight:900;color:var(--cyan)}.notice{background:#1d1a2a;border:1px solid #4c3a61;padding:12px 14px;border-radius:12px;color:#d9c9ed;font-size:13px;margin-top:14px}
+.toolrow{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}.toolrow:last-child{border-bottom:0}.toolrow p{margin:3px 0 0;color:var(--muted);font-size:13px}.toolrow button{flex-shrink:0}
+.hidden{display:none!important}.modal{position:fixed;inset:0;background:#03060bdc;display:grid;place-items:center;padding:18px;z-index:20}.modalBox{width:min(430px,100%);background:#111827;border:1px solid #30415b;border-radius:20px;padding:25px;box-shadow:0 25px 100px #0009}.modalBox h2{margin:0 0 5px;font-size:27px}.modalBox>p{margin:0 0 20px;color:var(--muted);font-size:13px}.modalBox .field{margin-bottom:13px}.switch{text-align:center;margin-top:17px;color:var(--muted);font-size:13px}.link{background:none;color:var(--cyan);padding:0;font-weight:800}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#e9fff7;color:#092019;border-radius:12px;padding:12px 17px;font-weight:800;z-index:30;display:none;box-shadow:0 10px 40px #0008}
+.skinGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.skinCard{border:1px solid #ffffff18;border-radius:16px;overflow:hidden;background:#0b1220;transition:transform .2s,border-color .2s}.skinCard:hover{transform:translateY(-5px) rotate(-.3deg);border-color:#52f4d077}.skinArt{height:145px;display:grid;place-items:center;font-size:56px;position:relative;overflow:hidden}.skinArt:before{content:"";position:absolute;width:160px;height:160px;border:1px solid #ffffff33;border-radius:50%;box-shadow:0 0 0 18px #ffffff09,0 0 0 38px #ffffff06}.skinArt span{z-index:1;filter:drop-shadow(0 8px 10px #0009);font-size:58px}.skinInfo{padding:13px}.skinInfo strong{display:block}.skinInfo p{font-size:12px;color:var(--muted);margin:5px 0 10px}.skinInfo button{width:100%;padding:9px;font-size:12px}.skinTag{font-size:10px;letter-spacing:1px;color:var(--cyan);font-weight:900;text-transform:uppercase}.memeBox{display:grid;grid-template-columns:115px 1fr;gap:16px;align-items:center;background:linear-gradient(120deg,#29213b,#142a35);border:1px solid #ffffff1b;padding:18px;border-radius:16px;margin-top:14px}.memeEmoji{font-size:60px;text-align:center;filter:drop-shadow(0 8px 15px #0006)}.memeBox h3{font-size:19px;margin:5px 0}.memeBox p{color:#c5cee0;margin:0}.memeActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.memeActions button{font-size:12px;padding:8px 11px}.sectionLabel{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--orange);font-weight:900;margin-bottom:8px}.skinFire{background:radial-gradient(circle at 50% 65%,#ffb24d,#a93335 40%,#271a35 80%)}.skinIce{background:radial-gradient(circle at 50% 60%,#c5ffff,#2b7ba6 42%,#14223f 85%)}.skinToxic{background:radial-gradient(circle at 50% 60%,#c4ff6b,#267e59 42%,#14291f 85%)}.skinNeon{background:radial-gradient(circle at 50% 60%,#ff91db,#8c3ac4 42%,#201a3b 85%)}.skinGold{background:radial-gradient(circle at 50% 60%,#ffeaa0,#bc7a26 42%,#39241a 85%)}.skinShadow{background:radial-gradient(circle at 50% 60%,#8c99c5,#39405e 42%,#111522 85%)}
+footer{color:#7f8da5;text-align:center;font-size:12px;padding:18px}
+@media(max-width:760px){.skinGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.memeBox{grid-template-columns:75px 1fr}.memeEmoji{font-size:46px}.hero{padding:22px}.layout{grid-template-columns:1fr}.side{position:static;display:flex;overflow:auto;gap:4px}.nav{white-space:nowrap;width:auto}.sideNote{display:none}.hero{align-items:flex-start;flex-direction:column}.heroTag{white-space:normal}.grid3,.sensGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:17px}}
+@media(max-width:430px){.skinGrid{grid-template-columns:1fr 1fr}.skinArt{height:112px}.skinInfo{padding:10px}.memeBox{grid-template-columns:1fr;text-align:center}.memeActions{justify-content:center}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.top{padding:12px 14px}.hero h1{font-size:34px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="logo">FF</div><div>CONFIG <span style="color:var(--cyan)">LAB</span></div></div>
+  <div style="display:flex;align-items:center;gap:12px"><span id="topUser" class="sub">Guest mode</span><button id="accountBtn" class="secondary" onclick="openAuth()">Sign in</button></div>
+</header>
+<div class="wrap">
+  <section class="hero">
+    <div><div class="eyebrow">Free Fire player toolkit</div><h1>Find your <span style="color:var(--cyan)">settings.</span><br>Play your way.</h1><p>Generate a starting sensitivity profile, size your HUD buttons, save emulator presets, and use safe performance checklists—all in one place.</p></div>
+    <div class="heroTag">● Personal profiles · Emulator presets</div>
+  </section>
+  <div class="layout">
+    <aside class="side">
+      <button class="nav active" data-tab="generator" onclick="showTab('generator',this)"><span>◈</span> Sensitivity lab</button>
+      <button class="nav" data-tab="hud" onclick="showTab('hud',this)"><span>▦</span> HUD & button size</button>
+      <button class="nav" data-tab="emulator" onclick="showTab('emulator',this)"><span>▣</span> Emulator presets</button>
+      <button class="nav" data-tab="boost" onclick="showTab('boost',this)"><span>⚡</span> Performance tools</button>
+      <button class="nav" data-tab="skins" onclick="showTab('skins',this)"><span>✦</span> Skins & memes</button>
+      <button class="nav" data-tab="account" onclick="showTab('account',this)"><span>◉</span> My account</button>
+      <div class="sideNote">Demo build · Settings are suggestions, not guaranteed results.</div>
+    </aside>
+    <main class="main">
+      <section id="tab-generator" class="tab">
+        <div class="panel">
+          <div class="panelHead"><div><h2>Sensitivity generator</h2><div class="sub">Creates two different starting profiles based on your device and play style.</div></div><span class="pill">● 2 profiles</span></div>
+          <div class="grid2">
+            <div class="field"><label>Device / platform</label><select id="device"><option value="phone">Android phone</option><option value="bluestacks">BlueStacks</option><option value="msi">MSI App Player</option></select></div>
+            <div class="field"><label>Screen / emulator resolution</label><select id="resolution"><option value="720">720p</option><option value="1080" selected>1080p</option><option value="1440">1440p</option></select></div>
+            <div class="field"><label>Play style</label><select id="style"><option value="headshot">Drag headshots</option><option value="balanced">Balanced / all-round</option><option value="rush">Rush / close range</option><option value="precision">Precision / long range</option></select></div>
+            <div class="field"><label>In-game sensitivity scale</label><select id="scale"><option value="200">0–200 scale</option><option value="100">0–100 scale</option></select></div>
+            <div class="field"><label>Mouse DPI (emulator only)</label><select id="dpi"><option>400</option><option selected>800</option><option>1200</option><option>1600</option></select></div>
+            <div class="field"><label>Control feel</label><select id="feel"><option value="fast">Fast / responsive</option><option value="medium" selected>Medium</option><option value="steady">Steady / controlled</option></select></div>
+          </div>
+          <div class="actions"><button onclick="generate()">Generate 2 profiles · <span id="cost">10</span> points</button><button class="secondary" onclick="randomize()">Randomize inputs</button></div>
+          <div class="smallprint">Each generation costs 10 points. New demo accounts start with 30 points. Sign in to keep your demo points and saved profiles on this browser.</div>
+          <div id="sensResult" class="result">
+            <div class="grid2">
+              <div class="metric"><small>Profile A · Fast drag</small><strong id="profileAName">—</strong><div class="sub" id="profileADesc"></div></div>
+              <div class="metric"><small>Profile B · Controlled</small><strong id="profileBName">—</strong><div class="sub" id="profileBDesc"></div></div>
+            </div>
+            <div class="sensGrid" id="sensValues"></div>
+            <div class="actions"><button class="secondary" onclick="saveProfile()">Save this generation</button><button class="secondary" onclick="copyProfile()">Copy values</button></div>
+            <div class="notice">These are test values, not a cheat or a guaranteed “auto-headshot” setup. Test in Training Ground and adjust by 3–5 points at a time.</div>
+          </div>
+        </div>
+      </section>
+      <section id="tab-hud" class="tab hidden">
+        <div class="panel">
+          <div class="panelHead"><div><h2>HUD & button size helper</h2><div class="sub">Starting points for touch controls. Percentages refer to the in-game HUD slider where available.</div></div></div>
+          <div class="grid2">
+            <div class="field"><label>Play style</label><select id="hudStyle"><option value="headshot">Drag headshots</option><option value="rush">Rush / close range</option><option value="claw">3–4 finger claw</option><option value="simple">Simple 2-thumb</option></select></div>
+            <div class="field"><label>Screen size</label><select id="hudScreen"><option value="small">Small phone</option><option value="medium" selected>Average phone</option><option value="large">Large phone / tablet</option><option value="pc">Emulator</option></select></div>
+          </div>
+          <div class="actions"><button onclick="makeHud()">Recommend button sizes</button></div>
+          <div id="hudResult" class="result"><div class="sensGrid" id="hudValues"></div><div class="smallprint">Use these as starting values; visibility and comfort matter more than copying another player's HUD.</div></div>
+        </div>
+      </section>
+      <section id="tab-emulator" class="tab hidden">
+        <div class="panel">
+          <div class="panelHead"><div><h2>BlueStacks & MSI presets</h2><div class="sub">Practical baseline settings for smoother gameplay on a Windows PC.</div></div><span class="pill">Safe settings</span></div>
+          <div class="grid2">
+            <div class="field"><label>Emulator</label><select id="emu"><option value="BlueStacks">BlueStacks 5</option><option value="MSI App Player">MSI App Player</option></select></div>
+            <div class="field"><label>PC memory</label><select id="ram"><option value="4">4 GB RAM total</option><option value="8" selected>8 GB RAM total</option><option value="16">16 GB RAM total</option><option value="32">32 GB+ RAM total</option></select></div>
+            <div class="field"><label>CPU</label><select id="cpu"><option value="4">4 logical cores or less</option><option value="8" selected>6–8 logical cores</option><option value="12">12+ logical cores</option></select></div>
+            <div class="field"><label>Target FPS</label><select id="fps"><option>30</option><option selected>60</option><option>90</option><option>120</option></select></div>
+          </div>
+          <div class="actions"><button onclick="makeEmu()">Build my preset</button></div>
+          <div id="emuResult" class="result"></div>
+          <div class="notice">Available FPS depends on the emulator, Free Fire version, monitor, drivers, and hardware. Do not force unsupported values or disable Windows security features.</div>
+        </div>
+      </section>
+      <section id="tab-boost" class="tab hidden">
+        <div class="panel">
+          <div class="panelHead"><div><h2>Performance toolkit</h2><div class="sub">Safe actions that can reduce background load or help diagnose lag. No fake “RAM cleaner” claims.</div></div></div>
+          <div class="toolrow"><div><strong>Windows gaming checklist</strong><p>Close heavy apps, enable Game Mode, use a performance power mode while plugged in.</p></div><button class="secondary" onclick="showChecklist('windows')">Open</button></div>
+          <div class="toolrow"><div><strong>Network / ping checklist</strong><p>Compare Wi-Fi vs hotspot, stop downloads, choose the nearest game region when available.</p></div><button class="secondary" onclick="showChecklist('network')">Open</button></div>
+          <div class="toolrow"><div><strong>Phone performance checklist</strong><p>Keep the phone cool, close demanding background apps, use the game’s built-in graphics options.</p></div><button class="secondary" onclick="showChecklist('phone')">Open</button></div>
+          <div id="checklist" class="notice hidden"></div>
+          <div class="notice">This app does not modify game files, bypass anti-cheat, spoof device identity, or promise lower ping. Avoid APKs that ask for accessibility access or your game password.</div>
+        </div>
+      </section>
+      <section id="tab-skins" class="tab hidden">
+        <div class="panel">
+          <div class="panelHead"><div><div class="sectionLabel">Locker showcase</div><h2>Skin concepts & loadout vibes</h2><div class="sub">Original fan-made visual concepts inspired by battle-royale aesthetics—not official in-game skins.</div></div><span class="pill">Fan concepts</span></div>
+          <div class="skinGrid">
+            <article class="skinCard"><div class="skinArt skinFire"><span>🔥</span></div><div class="skinInfo"><div class="skinTag">Legendary concept</div><strong>Inferno Striker</strong><p>Flame colors · aggressive rush vibe</p><button onclick="selectSkin('Inferno Striker')">Set as favorite</button></div></article>
+            <article class="skinCard"><div class="skinArt skinIce"><span>❄️</span></div><div class="skinInfo"><div class="skinTag">Epic concept</div><strong>Frost Phantom</strong><p>Ice blue · calm precision style</p><button onclick="selectSkin('Frost Phantom')">Set as favorite</button></div></article>
+            <article class="skinCard"><div class="skinArt skinToxic"><span>☣️</span></div><div class="skinInfo"><div class="skinTag">Rare concept</div><strong>Toxic Viper</strong><p>Acid green · stealthy loadout vibe</p><button onclick="selectSkin('Toxic Viper')">Set as favorite</button></div></article>
+            <article class="skinCard"><div class="skinArt skinNeon"><span>🌌</span></div><div class="skinInfo"><div class="skinTag">Mythic concept</div><strong>Neon Rift</strong><p>Cyber colors · flashy style</p><button onclick="selectSkin('Neon Rift')">Set as favorite</button></div></article>
+            <article class="skinCard"><div class="skinArt skinGold"><span>👑</span></div><div class="skinInfo"><div class="skinTag">Elite concept</div><strong>Golden Ace</strong><p>Gold finish · champion energy</p><button onclick="selectSkin('Golden Ace')">Set as favorite</button></div></article>
+            <article class="skinCard"><div class="skinArt skinShadow"><span>🌑</span></div><div class="skinInfo"><div class="skinTag">Stealth concept</div><strong>Shadow Ops</strong><p>Dark tactical colors · low-key look</p><button onclick="selectSkin('Shadow Ops')">Set as favorite</button></div></article>
+          </div>
+          <div class="notice" id="favoriteSkin">No favorite concept selected yet. Choose a card to set your favorite.</div>
+        </div>
+        <div class="panel">
+          <div class="panelHead"><div><div class="sectionLabel">Player humor</div><h2>Free Fire meme generator</h2><div class="sub">Tap the button for a new gamer moment. Copy the text for a caption.</div></div><span class="pill">Meme mode</span></div>
+          <div class="memeBox"><div class="memeEmoji" id="memeEmoji">😂</div><div><div class="skinTag" id="memeCategory">RANKED MOMENT</div><h3 id="memeTitle">When your teammate says “one tap”</h3><p id="memeText">Bro misses the whole magazine and blames the ping.</p><div class="memeActions"><button onclick="newMeme()">Next meme ↻</button><button class="secondary" onclick="copyMeme()">Copy caption</button></div></div></div>
+          <div class="smallprint">Memes are original text jokes. No official artwork or account rewards are included.</div>
+        </div>
+      </section>
+      <section id="tab-account" class="tab hidden">
+        <div class="panel">
+          <div class="panelHead"><div><h2>My account</h2><div class="sub">Your local demo profile and saved settings.</div></div></div>
+          <div class="grid3"><div class="metric"><small>Account</small><strong id="accountName" style="font-size:18px">Guest</strong></div><div class="metric"><small>Points</small><strong class="points" id="points">30</strong></div><div class="metric"><small>Saved profiles</small><strong id="savedCount">0</strong></div></div>
+          <div class="actions"><button onclick="openAuth()">Sign in / Create account</button><button class="secondary" onclick="showSaved()">View saved profiles</button><button class="secondary" onclick="logout()">Sign out</button></div>
+          <div id="savedProfiles" class="notice hidden"></div>
+          <div class="notice"><strong>Important:</strong> this is a front-end demo. Accounts and points are stored only in this browser using local storage—not a real secure account system and not synced across devices. A production version needs a backend, database, secure authentication, and server-side point validation.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer>FF Config Lab · Independent fan-made concept · Not affiliated with Garena, BlueStacks, or MSI.</footer>
+</div>
+<div id="authModal" class="modal hidden">
+  <div class="modalBox">
+    <div class="brand" style="margin-bottom:18px"><div class="logo">FF</div><div>CONFIG <span style="color:var(--cyan)">LAB</span></div></div>
+    <h2 id="authTitle">Welcome back</h2><p id="authDesc">Sign in to access your local demo profile.</p>
+    <form id="authForm">
+      <div class="field"><label>Username</label><input id="username" required minlength="3" maxlength="24" autocomplete="username" placeholder="Your username"></div>
+      <div class="field"><label>Password</label><input id="password" required minlength="4" type="password" autocomplete="current-password" placeholder="At least 4 characters"></div>
+      <button class="full" id="authSubmit" type="submit">Sign in</button>
+    </form>
+    <div class="switch"><span id="switchText">New here?</span> <button class="link" id="switchMode" onclick="toggleAuthMode()">Create demo account</button></div>
+    <div class="smallprint">Do not use a real or reused password here. This prototype does not provide secure authentication.</div>
+    <button class="secondary full" style="margin-top:12px" onclick="closeAuth()">Continue as guest</button>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+let user=null, authMode='login', lastProfiles=null;
+const DBKEY='ff_config_lab_demo_v1';
+function db(){try{return JSON.parse(localStorage.getItem(DBKEY)||'{}')}catch(e){return {}}}
+function writeDB(data){localStorage.setItem(DBKEY,JSON.stringify(data))}
+function currentUser(){return user?db().users?.[user.toLowerCase()]:null}
+function ensureGuest(){if(!user)user=null;renderAccount()}
+function toast(msg){$('toast').textContent=msg;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2400)}
+function showTab(tab,btn){document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));$('tab-'+tab).classList.remove('hidden');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');else document.querySelector('[data-tab="'+tab+'"]').classList.add('active');}
+function openAuth(){authMode='login';updateAuth();$('authModal').classList.remove('hidden')}
+function closeAuth(){$('authModal').classList.add('hidden')}
+function toggleAuthMode(){authMode=authMode==='login'?'register':'login';updateAuth()}
+function updateAuth(){$('authTitle').textContent=authMode==='login'?'Welcome back':'Create your account';$('authDesc').textContent=authMode==='login'?'Sign in to access your local demo profile.':'Create a local demo profile and start with 30 points.';$('authSubmit').textContent=authMode==='login'?'Sign in':'Create account';$('switchText').textContent=authMode==='login'?'New here?':'Already have an account?';$('switchMode').textContent=authMode==='login'?'Create demo account':'Sign in';}
+$('authForm').addEventListener('submit',e=>{e.preventDefault();const name=$('username').value.trim(),pass=$('password').value;if(name.length<3||pass.length<4){toast('Use a 3+ character username and 4+ character demo password.');return}let data=db(),key=name.toLowerCase();data.users=data.users||{};if(authMode==='register'){if(data.users[key]){toast('That username already exists on this browser.');return}data.users[key]={name,pass,points:30,saved:[]};writeDB(data);user=name;closeAuth();renderAccount();toast('Demo account created · 30 points');}else{if(!data.users[key]||data.users[key].pass!==pass){toast('Username or password is incorrect.');return}user=data.users[key].name;closeAuth();renderAccount();toast('Signed in locally.')}});
+function logout(){user=null;renderAccount();toast('Signed out.')}
+function renderAccount(){const u=currentUser();$('topUser').textContent=u?'Signed in: '+u.name:'Guest mode';$('accountBtn').textContent=u?'Sign out':'Sign in';$('accountBtn').onclick=u?logout:openAuth;$('accountName').textContent=u?u.name:'Guest';$('points').textContent=u?u.points:'30 (guest)';$('savedCount').textContent=u?u.saved.length:'0';$('cost').textContent='10'}
+function getPoints(){const u=currentUser();return u?u.points:30}
+function spendPoints(n){if(!user){toast('Sign in first to use points.');openAuth();return false}let d=db(),u=d.users[user.toLowerCase()];if(u.points<n){toast('Not enough points.');return false}u.points-=n;writeDB(d);renderAccount();return true}
+function generate(){if(!spendPoints(10))return;const max=+$('scale').value,device=$('device').value,style=$('style').value,feel=$('feel').value,res=+$('resolution').value;let base={headshot: [185,178,165,150,125,100],balanced:[175,168,155,140,115,95],rush:[195,188,175,160,135,110],precision:[155,148,140,125,105,85]}[style];if(max===100)base=base.map(v=>Math.round(v/2));let factor=feel==='fast'?1.04:feel==='steady'?.94:1;let a=base.map(v=>Math.round(v*factor));let b=base.map((v,i)=>Math.max(1,Math.round(v*(i<2?.91:.96))));if(device!=='phone'){let f=res===720?1.04:res===1440?.94:1;a=a.map(v=>Math.min(max,Math.round(v*f)));b=b.map(v=>Math.min(max,Math.round(v*f*.97)))}else{a=a.map(v=>Math.min(max,v));b=b.map(v=>Math.min(max,v))}lastProfiles={device,style,max,a,b,dpi:$('dpi').value,res};$('profileAName').textContent='Fast Drag';$('profileBName').textContent='Steady Aim';$('profileADesc').textContent=device==='phone'?'Touch-focused starting point':'Mouse/emulator starting point · DPI '+$('dpi').value;$('profileBDesc').textContent='Lower movement for more control';const labels=['General','Red Dot','2× Scope','4× Scope','Sniper Scope','Free Look'];$('sensValues').innerHTML=labels.map((l,i)=>`<div class="sens"><span>${l}</span><strong>${a[i]} <span style="font-size:13px;color:#9baac2">/ ${max}</span></strong><div class="sub">Profile B: ${b[i]}</div></div>`).join('');$('sensResult').classList.add('show');renderAccount();toast('Generated two profiles · 10 points used')}
+function randomize(){['device','resolution','style','scale','dpi','feel'].forEach(id=>{const el=$(id);el.selectedIndex=Math.floor(Math.random()*el.options.length)});toast('Inputs randomized')}
+function saveProfile(){if(!user){toast('Sign in to save profiles.');openAuth();return}if(!lastProfiles){toast('Generate a profile first.');return}let d=db();d.users[user.toLowerCase()].saved.unshift({date:new Date().toLocaleString(),profile:lastProfiles});writeDB(d);renderAccount();toast('Profile saved to this browser.')}
+function copyProfile(){if(!lastProfiles){toast('Generate a profile first.');return}const p=lastProfiles,txt='FF Config Lab\\nProfile A: '+p.a.join(', ')+'\\nProfile B: '+p.b.join(', ')+'\\nScale: 0-'+p.max+'\\n';if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>toast('Values copied')).catch(()=>prompt('Copy your settings:',txt));else prompt('Copy your settings:',txt)}
+function makeHud(){let style=$('hudStyle').value,screen=$('hudScreen').value;let vals=style==='rush'?[52,48,42,48,55,45]:style==='claw'?[42,38,35,42,48,40]:style==='simple'?[58,52,48,50,58,48]:[48,44,38,44,52,42];let f=screen==='small'?.94:screen==='large'?1.05:screen==='pc'?.9:1;vals=vals.map(v=>Math.round(v*f));let labels=['Fire button','Scope / ADS','Jump','Crouch','Gloo wall','Joystick'];$('hudValues').innerHTML=labels.map((l,i)=>`<div class="sens"><span>${l}</span><strong>${vals[i]}%</strong><div class="sub">Suggested starting size</div></div>`).join('');$('hudResult').classList.add('show')}
+function makeEmu(){let emu=$('emu').value,ram=+$('ram').value,cpu=+$('cpu').value,fps=+$('fps').value;let mem=ram<=4?2:ram===8?3:ram===16?4:6;let cores=cpu<=4?2:cpu===8?4:6;let res=ram<=4?'1280 × 720':'1600 × 900';let warning='';if(ram<=4&&fps>60)warning='With 4 GB total RAM, start at 30–60 FPS and lower resolution if stuttering.';if(cpu<=4&&fps>60)warning+=' A lower FPS cap may be more stable on a low-core CPU.';if(fps>=90)warning+=' Use 90/120 FPS only if your emulator, game, display, and PC actually support it.';$('emuResult').innerHTML=`<div class="grid3"><div class="metric"><small>Emulator</small><strong style="font-size:17px">${emu}</strong></div><div class="metric"><small>CPU allocation</small><strong>${cores} cores</strong></div><div class="metric"><small>Memory allocation</small><strong>${mem} GB</strong></div></div><div class="toolrow"><div><strong>Starting resolution</strong><p>${res}</p></div></div><div class="toolrow"><div><strong>FPS target</strong><p>${fps} FPS, if supported</p></div></div><div class="toolrow"><div><strong>Graphics mode</strong><p>Start with the emulator's recommended engine; test compatible modes one at a time.</p></div></div><div class="toolrow"><div><strong>Windows</strong><p>Enable virtualization only if supported and follow official emulator instructions. Keep drivers updated.</p></div></div>${warning?`<div class="notice">${warning}</div>`:''}<div class="smallprint">Apply these manually in ${emu} settings; this page cannot configure the emulator directly.</div>`;$('emuResult').classList.add('show')}
+function showChecklist(kind){const content={windows:'<strong>Windows checklist</strong><br>1. Close browsers, launchers, and downloads you do not need.<br>2. Turn on Windows Game Mode.<br>3. Use Balanced/Best performance power mode while plugged in.<br>4. Update GPU drivers from the PC or GPU manufacturer.<br>5. Avoid registry “FPS boost” scripts and disabling security services.',network:'<strong>Network checklist</strong><br>1. Stop downloads and cloud sync while playing.<br>2. Compare Wi-Fi, Ethernet, and hotspot if available.<br>3. Play near the router / use a stable 5 GHz Wi-Fi connection when supported.<br>4. Run several ping tests; one result is not enough.<br>5. DNS usually does not lower in-game ping if routing is the issue.',phone:'<strong>Phone checklist</strong><br>1. Let the phone cool before long sessions.<br>2. Close heavy apps and pause downloads.<br>3. Use the game&#39;s official graphics/FPS settings.<br>4. Keep some storage free and install system updates.<br>5. Avoid booster APKs promising impossible FPS or asking for account credentials.'};$('checklist').innerHTML=content[kind];$('checklist').classList.remove('hidden')}
+function showSaved(){if(!user){toast('Sign in to view saved profiles.');openAuth();return}let u=currentUser(),box=$('savedProfiles');box.innerHTML=u.saved.length?'<strong>Saved profiles</strong><br>'+u.saved.map((s,i)=>`${i+1}. ${s.date} — ${s.profile.device}, ${s.profile.style}, scale 0–${s.profile.max}`).join('<br>'):'No saved profiles yet. Generate and save one first.';box.classList.remove('hidden')}
+
+const memes=[
+ {e:'😂',c:'RANKED MOMENT',t:'When your teammate says “one tap”',x:'Bro misses the whole magazine and blames the ping.'},
+ {e:'💀',c:'SQUAD CHAOS',t:'The squad plan was perfect…',x:'Until all four players rush through four different doors.'},
+ {e:'🎯',c:'AIM TRAINING',t:'Crosshair on the enemy. Bullet in another country.',x:'Time to adjust sensitivity by 2 points and call it science.'},
+ {e:'📶',c:'PING DIARIES',t:'Ping is 20 ms in the lobby',x:'The second the match starts: welcome to slideshow mode.'},
+ {e:'🧱',c:'GLOO WALL PANIC',t:'I placed the wall. Just not in front of me.',x:'The enemy is confused. I am more confused.'},
+ {e:'👑',c:'BOOYAH DREAMS',t:'Last alive, full confidence',x:'Opens map, forgets where the enemy is, gets jump-scared.'},
+ {e:'🫡',c:'SQUAD PROMISE',t:'“I will revive you bro”',x:'Teammate loots your crate with respectful silence.'}
+];let memeIndex=0;
+function selectSkin(name){$('favoriteSkin').innerHTML='<strong>Favorite concept:</strong> '+name+' — saved for this session.';toast(name+' selected')}
+function newMeme(){memeIndex=(memeIndex+1)%memes.length;const m=memes[memeIndex];$('memeEmoji').textContent=m.e;$('memeCategory').textContent=m.c;$('memeTitle').textContent=m.t;$('memeText').textContent=m.x}
+function copyMeme(){const m=memes[memeIndex],txt=m.t+' — '+m.x;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>toast('Meme caption copied')).catch(()=>prompt('Copy caption:',txt));else prompt('Copy caption:',txt)}
+
+renderAccount();
+</script>
+</body>
+</html>
