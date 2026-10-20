@@ -122,11 +122,11 @@ footer{color:#7f8da5;text-align:center;font-size:12px;padding:18px}
       </section>
       <section id="tab-account" class="tab hidden">
         <div class="panel">
-          <div class="panelHead"><div><h2>My account</h2><div class="sub">Your local demo profile and saved settings.</div></div></div>
+          <div class="panelHead"><div><h2>My account</h2><div class="sub">Your signed-in account and this browser’s saved settings.</div></div></div>
           <div class="grid3"><div class="metric"><small>Account</small><strong id="accountName" style="font-size:18px">Guest</strong></div><div class="metric"><small>Points</small><strong class="points" id="points">30</strong></div><div class="metric"><small>Saved profiles</small><strong id="savedCount">0</strong></div></div>
           <div class="actions"><button onclick="openAuth()">Sign in / Create account</button><button class="secondary" onclick="showSaved()">View saved profiles</button><button class="secondary" onclick="logout()">Sign out</button></div>
           <div id="savedProfiles" class="notice hidden"></div>
-          <div class="notice"><strong>Important:</strong> this is a front-end demo. Accounts and points are stored only in this browser using local storage—not a real secure account system and not synced across devices. A production version needs a backend, database, secure authentication, and server-side point validation.</div>
+          <div class="notice"><strong>Important:</strong> Supabase now handles authentication. Points and saved profiles are still stored in this browser and do not sync across devices yet. Do not treat client-side points as secure; cloud database storage and server-side point validation are the next step.</div>
         </div>
       </section>
     </main>
@@ -138,38 +138,43 @@ footer{color:#7f8da5;text-align:center;font-size:12px;padding:18px}
     <div class="brand" style="margin-bottom:18px"><div class="logo">FF</div><div>CONFIG <span style="color:var(--cyan)">LAB</span></div></div>
     <h2 id="authTitle">Welcome back</h2><p id="authDesc">Sign in to access your local demo profile.</p>
     <form id="authForm">
-      <div class="field"><label>Username</label><input id="username" required minlength="3" maxlength="24" autocomplete="username" placeholder="Your username"></div>
+      <div class="field"><label>Email address</label><input id="username" type="email" required autocomplete="email" placeholder="you@example.com"></div>
       <div class="field"><label>Password</label><input id="password" required minlength="4" type="password" autocomplete="current-password" placeholder="At least 4 characters"></div>
       <button class="full" id="authSubmit" type="submit">Sign in</button>
+      <button class="secondary full" type="button" onclick="signInWithGoogle()" style="margin-top:10px">Continue with Google</button>
     </form>
     <div class="switch"><span id="switchText">New here?</span> <button class="link" id="switchMode" onclick="toggleAuthMode()">Create demo account</button></div>
-    <div class="smallprint">Do not use a real or reused password here. This prototype does not provide secure authentication.</div>
+    <div class="smallprint">Authentication is handled by Supabase. Use an email you can access to verify your account.</div>
     <button class="secondary full" style="margin-top:12px" onclick="closeAuth()">Continue as guest</button>
   </div>
 </div>
 <div id="toast" class="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = "https://xajeojwfqcaujukawstb.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ZjphP10GS_cDOQ0XlErU_A_cylfXhKQ";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 const $=id=>document.getElementById(id);
 let user=null, authMode='login', lastProfiles=null;
-const DBKEY='ff_config_lab_demo_v1';
+const DBKEY='ff_config_lab_user_data_v1';
 function db(){try{return JSON.parse(localStorage.getItem(DBKEY)||'{}')}catch(e){return {}}}
 function writeDB(data){localStorage.setItem(DBKEY,JSON.stringify(data))}
-function currentUser(){return user?db().users?.[user.toLowerCase()]:null}
-function ensureGuest(){if(!user)user=null;renderAccount()}
-function toast(msg){$('toast').textContent=msg;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2400)}
+function currentUser(){if(!user)return null;let data=db();data.users=data.users||{};const key=user.toLowerCase();if(!data.users[key]){data.users[key]={name:user,points:30,saved:[]};writeDB(data)}return data.users[key]}
+function toast(msg){$('toast').textContent=msg;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2600)}
 function showTab(tab,btn){document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));$('tab-'+tab).classList.remove('hidden');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');else document.querySelector('[data-tab="'+tab+'"]').classList.add('active');}
 function openAuth(){authMode='login';updateAuth();$('authModal').classList.remove('hidden')}
 function closeAuth(){$('authModal').classList.add('hidden')}
 function toggleAuthMode(){authMode=authMode==='login'?'register':'login';updateAuth()}
-function updateAuth(){$('authTitle').textContent=authMode==='login'?'Welcome back':'Create your account';$('authDesc').textContent=authMode==='login'?'Sign in to access your local demo profile.':'Create a local demo profile and start with 30 points.';$('authSubmit').textContent=authMode==='login'?'Sign in':'Create account';$('switchText').textContent=authMode==='login'?'New here?':'Already have an account?';$('switchMode').textContent=authMode==='login'?'Create demo account':'Sign in';}
-$('authForm').addEventListener('submit',e=>{e.preventDefault();const name=$('username').value.trim(),pass=$('password').value;if(name.length<3||pass.length<4){toast('Use a 3+ character username and 4+ character demo password.');return}let data=db(),key=name.toLowerCase();data.users=data.users||{};if(authMode==='register'){if(data.users[key]){toast('That username already exists on this browser.');return}data.users[key]={name,pass,points:30,saved:[]};writeDB(data);user=name;closeAuth();renderAccount();toast('Demo account created · 30 points');}else{if(!data.users[key]||data.users[key].pass!==pass){toast('Username or password is incorrect.');return}user=data.users[key].name;closeAuth();renderAccount();toast('Signed in locally.')}});
-function logout(){user=null;renderAccount();toast('Signed out.')}
+function updateAuth(){$('authTitle').textContent=authMode==='login'?'Welcome back':'Create your account';$('authDesc').textContent=authMode==='login'?'Sign in with your email and password.':'Create your account. Check your email if confirmation is required.';$('authSubmit').textContent=authMode==='login'?'Sign in':'Create account';$('switchText').textContent=authMode==='login'?'New here?':'Already have an account?';$('switchMode').textContent=authMode==='login'?'Create account':'Sign in';$('password').autocomplete=authMode==='login'?'current-password':'new-password';}
+$('authForm').addEventListener('submit',async e=>{e.preventDefault();const email=$('username').value.trim().toLowerCase(),password=$('password').value;if(!email||password.length<6){toast('Enter a valid email and a password of at least 6 characters.');return}$('authSubmit').disabled=true;try{if(authMode==='register'){const {data,error}=await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:window.location.href.split('#')[0]}});if(error)throw error;if(data.session){user=data.user.email;currentUser();closeAuth();renderAccount();toast('Account created and signed in.')}else{toast('Registration submitted. Check your email to confirm, then sign in.')}}else{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;user=data.user.email;currentUser();closeAuth();renderAccount();toast('Signed in successfully.')}}catch(err){toast(err.message||'Authentication failed. Check Supabase settings.')}finally{$('authSubmit').disabled=false}});
+async function signInWithGoogle(){try{const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href.split('#')[0]}});if(error)throw error}catch(err){toast(err.message||'Google sign-in is not configured yet.')}}
+async function logout(){try{const {error}=await supabaseClient.auth.signOut();if(error)throw error;user=null;renderAccount();toast('Signed out.')}catch(err){toast(err.message||'Could not sign out.')}}
 function renderAccount(){const u=currentUser();$('topUser').textContent=u?'Signed in: '+u.name:'Guest mode';$('accountBtn').textContent=u?'Sign out':'Sign in';$('accountBtn').onclick=u?logout:openAuth;$('accountName').textContent=u?u.name:'Guest';$('points').textContent=u?u.points:'30 (guest)';$('savedCount').textContent=u?u.saved.length:'0';$('cost').textContent='10'}
 function getPoints(){const u=currentUser();return u?u.points:30}
-function spendPoints(n){if(!user){toast('Sign in first to use points.');openAuth();return false}let d=db(),u=d.users[user.toLowerCase()];if(u.points<n){toast('Not enough points.');return false}u.points-=n;writeDB(d);renderAccount();return true}
+function spendPoints(n){if(!user){toast('Sign in first to use points.');openAuth();return false}let d=db(),key=user.toLowerCase();d.users=d.users||{};d.users[key]=d.users[key]||{name:user,points:30,saved:[]};let u=d.users[key];if(u.points<n){toast('Not enough points.');return false}u.points-=n;writeDB(d);renderAccount();return true}
 function generate(){if(!spendPoints(10))return;const max=+$('scale').value,device=$('device').value,style=$('style').value,feel=$('feel').value,res=+$('resolution').value;let base={headshot: [185,178,165,150,125,100],balanced:[175,168,155,140,115,95],rush:[195,188,175,160,135,110],precision:[155,148,140,125,105,85]}[style];if(max===100)base=base.map(v=>Math.round(v/2));let factor=feel==='fast'?1.04:feel==='steady'?.94:1;let a=base.map(v=>Math.round(v*factor));let b=base.map((v,i)=>Math.max(1,Math.round(v*(i<2?.91:.96))));if(device!=='phone'){let f=res===720?1.04:res===1440?.94:1;a=a.map(v=>Math.min(max,Math.round(v*f)));b=b.map(v=>Math.min(max,Math.round(v*f*.97)))}else{a=a.map(v=>Math.min(max,v));b=b.map(v=>Math.min(max,v))}lastProfiles={device,style,max,a,b,dpi:$('dpi').value,res};$('profileAName').textContent='Fast Drag';$('profileBName').textContent='Steady Aim';$('profileADesc').textContent=device==='phone'?'Touch-focused starting point':'Mouse/emulator starting point · DPI '+$('dpi').value;$('profileBDesc').textContent='Lower movement for more control';const labels=['General','Red Dot','2× Scope','4× Scope','Sniper Scope','Free Look'];$('sensValues').innerHTML=labels.map((l,i)=>`<div class="sens"><span>${l}</span><strong>${a[i]} <span style="font-size:13px;color:#9baac2">/ ${max}</span></strong><div class="sub">Profile B: ${b[i]}</div></div>`).join('');$('sensResult').classList.add('show');renderAccount();toast('Generated two profiles · 10 points used')}
 function randomize(){['device','resolution','style','scale','dpi','feel'].forEach(id=>{const el=$(id);el.selectedIndex=Math.floor(Math.random()*el.options.length)});toast('Inputs randomized')}
-function saveProfile(){if(!user){toast('Sign in to save profiles.');openAuth();return}if(!lastProfiles){toast('Generate a profile first.');return}let d=db();d.users[user.toLowerCase()].saved.unshift({date:new Date().toLocaleString(),profile:lastProfiles});writeDB(d);renderAccount();toast('Profile saved to this browser.')}
+function saveProfile(){if(!user){toast('Sign in to save profiles.');openAuth();return}if(!lastProfiles){toast('Generate a profile first.');return}let d=db(),key=user.toLowerCase();d.users=d.users||{};d.users[key]=d.users[key]||{name:user,points:30,saved:[]};d.users[key].saved.unshift({date:new Date().toLocaleString(),profile:lastProfiles});writeDB(d);renderAccount();toast('Profile saved to this browser.')}
 function copyProfile(){if(!lastProfiles){toast('Generate a profile first.');return}const p=lastProfiles,txt='FF Config Lab\\nProfile A: '+p.a.join(', ')+'\\nProfile B: '+p.b.join(', ')+'\\nScale: 0-'+p.max+'\\n';if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>toast('Values copied')).catch(()=>prompt('Copy your settings:',txt));else prompt('Copy your settings:',txt)}
 function makeHud(){let style=$('hudStyle').value,screen=$('hudScreen').value;let vals=style==='rush'?[52,48,42,48,55,45]:style==='claw'?[42,38,35,42,48,40]:style==='simple'?[58,52,48,50,58,48]:[48,44,38,44,52,42];let f=screen==='small'?.94:screen==='large'?1.05:screen==='pc'?.9:1;vals=vals.map(v=>Math.round(v*f));let labels=['Fire button','Scope / ADS','Jump','Crouch','Gloo wall','Joystick'];$('hudValues').innerHTML=labels.map((l,i)=>`<div class="sens"><span>${l}</span><strong>${vals[i]}%</strong><div class="sub">Suggested starting size</div></div>`).join('');$('hudResult').classList.add('show')}
 function makeEmu(){let emu=$('emu').value,ram=+$('ram').value,cpu=+$('cpu').value,fps=+$('fps').value;let mem=ram<=4?2:ram===8?3:ram===16?4:6;let cores=cpu<=4?2:cpu===8?4:6;let res=ram<=4?'1280 × 720':'1600 × 900';let warning='';if(ram<=4&&fps>60)warning='With 4 GB total RAM, start at 30–60 FPS and lower resolution if stuttering.';if(cpu<=4&&fps>60)warning+=' A lower FPS cap may be more stable on a low-core CPU.';if(fps>=90)warning+=' Use 90/120 FPS only if your emulator, game, display, and PC actually support it.';$('emuResult').innerHTML=`<div class="grid3"><div class="metric"><small>Emulator</small><strong style="font-size:17px">${emu}</strong></div><div class="metric"><small>CPU allocation</small><strong>${cores} cores</strong></div><div class="metric"><small>Memory allocation</small><strong>${mem} GB</strong></div></div><div class="toolrow"><div><strong>Starting resolution</strong><p>${res}</p></div></div><div class="toolrow"><div><strong>FPS target</strong><p>${fps} FPS, if supported</p></div></div><div class="toolrow"><div><strong>Graphics mode</strong><p>Start with the emulator's recommended engine; test compatible modes one at a time.</p></div></div><div class="toolrow"><div><strong>Windows</strong><p>Enable virtualization only if supported and follow official emulator instructions. Keep drivers updated.</p></div></div>${warning?`<div class="notice">${warning}</div>`:''}<div class="smallprint">Apply these manually in ${emu} settings; this page cannot configure the emulator directly.</div>`;$('emuResult').classList.add('show')}
@@ -189,6 +194,8 @@ function selectSkin(name){$('favoriteSkin').innerHTML='<strong>Favorite concept:
 function newMeme(){memeIndex=(memeIndex+1)%memes.length;const m=memes[memeIndex];$('memeEmoji').textContent=m.e;$('memeCategory').textContent=m.c;$('memeTitle').textContent=m.t;$('memeText').textContent=m.x}
 function copyMeme(){const m=memes[memeIndex],txt=m.t+' — '+m.x;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>toast('Meme caption copied')).catch(()=>prompt('Copy caption:',txt));else prompt('Copy caption:',txt)}
 
+supabaseClient.auth.getSession().then(({data})=>{user=data.session?.user?.email||null;renderAccount()});
+supabaseClient.auth.onAuthStateChange((_event,session)=>{user=session?.user?.email||null;renderAccount()});
 renderAccount();
 </script>
 </body>
